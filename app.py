@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
+import random
+import smtplib
+from email.mime.text import MIMEText
+from auth.signup import save_user
 
 app = Flask(__name__)
 
@@ -13,9 +17,22 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        otp = request.form['otp']
+
+        otp_genrated = random.randint(100000, 999999)
+        msg = MIMEText(f"Your Enciphera verification code is: {otp_genrated}")
         
 
-        return "form receiveed"
+        
+
+        if otp == otp_genrated:
+            save_user(name, username, email, password)
+
+        else:
+            return {"error": "Please enter correct otp"}
+            
+
+        
 
 
 
