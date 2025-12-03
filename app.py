@@ -6,7 +6,20 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
+@app.route('/signup', methods = ['GET','POST'])
+def signup():
+    if request.method == 'POST':
+        name = request.form['name']
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
 
+        return "form receiveed"
+
+
+
+
+    return render_template('signup.html')
 
         
 

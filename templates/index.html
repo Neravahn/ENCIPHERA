@@ -9,7 +9,13 @@
     <style>
         @font-face {
             font-family: 'SigmarOne';
-            src: url("{{ url_for('static', filename='fonts/Sigmar_One/SigmarOne-Regular.ttf') }}") format('truetype');
+            src: url("{{ url_for('static', filename='fonts/SigmarOne-Regular.ttf') }}") format('truetype');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'Nunito';
+            src: url("{{ url_for('static', filename='fonts/Nunito-VariableFont_wght.ttf') }}") format('truetype');
             font-weight: bold;
         }
     </style>
@@ -26,11 +32,17 @@
         </p>
 
         <button id="login">LOGIN</button>
-        <button id="signup">SIGN UP</button>
+        <a href="{{ url_for('signup') }}">
+            <button id="signup">SIGN UP</button>
+        </a>
     </div>
 
     <footer>
-        <a href="https://github.com/Neravahn/ENCIPHERA" target="_blank">GITHUB</a>
+        <a href="https://github.com/Neravahn/ENCIPHERA" target="_blank">
+            <img src="{{ url_for('static', filename='images/icons8-github-50.png') }}" alt="GitHub"
+                style="width:25px; height:25px; vertical-align:middle; margin-right:2px;margin-bottom:2px; filter: invert(100%);">
+            GITHUB
+        </a>
     </footer>
 
 </body>
