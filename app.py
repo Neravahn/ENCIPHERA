@@ -13,6 +13,7 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        
 
         return "form receiveed"
 
