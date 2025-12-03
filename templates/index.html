@@ -31,7 +31,9 @@
             Zero-knowledge, frictionless access — privacy without compromise.
         </p>
 
-        <button id="login">LOGIN</button>
+        <a href="{{ url_for('login') }}">
+            <button id="login">LOGIN</button>
+        </a>
         <a href="{{ url_for('signup') }}">
             <button id="signup">SIGN UP</button>
         </a>

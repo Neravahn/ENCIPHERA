@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENCIPHERA - Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+    <style>
+        @font-face {
+            font-family: 'Nunito';
+            src: url("{{ url_for('static', filename='fonts/Nunito-VariableFont_wght.ttf') }}") format('truetype');
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="form-container">
+        <form id="signup" method="POST" action="/login">
+            <h2>LOGIN</h2>
+
+            <label for="username">USERNAME</label>
+            <input type="text" id="username" name="username" placeholder="Choose a username" required>
+
+
+            <label for="password">PASSWORD</label>
+            <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+
+            <button type="submit">Sign Up</button>
+        </form>
+        <div id="errors">
+        </div>
+    </div>
+
+
+
+    <!--SCRIPT-->
+    <script>
+        const form = document.getElementById('signup');
+        const password = document.getElementById('password');
+        const errorDiv = document.getElementById('errors');
+
+        form.addEventListener('submit', function (event) {
+        })
+
+    </script>
+</body>
+
+</html>
