@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENCIPHER - Signup</title>
+    <title>ENCIPHERA - Signup</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     <style>
         @font-face {
@@ -33,12 +33,41 @@
             <input type="password" id="password" name="password" placeholder="Create a password" required>
 
             <label for="confirm-password">CONFIRM PASSWORD</label>
-            <input type="password" id="confirm-password" name="confirm_password" placeholder="Re-enter password"
+            <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password"
                 required>
 
             <button type="submit">Sign Up</button>
         </form>
+        <div id="errors">
+        </div>
     </div>
+
+
+
+    <!--SCRIPT-->
+    <script>
+        const form = document.getElementById('signup');
+        const password = document.getElementById('password');
+        const confirm_password = document.getElementById('confirm_password');
+        const errorDiv = document.getElementById('errors');
+
+        form.addEventListener('submit', function (event) {
+            errorDiv.innerHTML = "";
+
+
+            let errors = []
+            if (password.value !== confirm_password.value) {
+                errors.push('PASSSWORD DO NOT MATCH');
+            }
+
+            if (errors.length > 0) {
+                event.preventDefault();
+                errorDiv.style.display = "block";
+                errorDiv.innerHTML = errors.join("<br>");
+            }
+        })
+
+    </script>
 </body>
 
 </html>
