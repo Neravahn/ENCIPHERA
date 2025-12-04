@@ -22,21 +22,13 @@ def save_user(name, username, email, password):
         cursor.execute(query, data)
         conn.commit()
         print("done")
-        return {'success': 'SUCCESSFUL'}
-
+        
     except sqlite3.IntegrityError as e:
 
         error_message = str(e)
 
         print(str(e))  #<<----- ONLY IN DEVLOPING PHASE
 
-
-        if "users.username" in error_message:
-            return {'error': 'Username already taken.'}
-        elif "users.email" in error_message:
-            return {'error': 'Email already registered.'}
-        else:
-            return {'error': 'Something went wrong'}
     
     finally: 
         conn.close()
