@@ -74,6 +74,8 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
+        session['username'] = username
+
         verified = verify_user(username, password)
 
         if verified:
@@ -88,8 +90,11 @@ def login():
 
 @app.route('/dashboard', methods = ['GET', 'POST'])
 def dashboard():
+    username = session.get('username')
+    return render_template('dashboard.html', username = f"Hi , {username}")
 
-    return render_template('dashboard.html')
-
+@app.route('/editor', methods = ['GET', 'POST'])
+def editor():
+    return render_template('editor.html')
 if __name__ == "__main__":
     app.run(debug=True)
