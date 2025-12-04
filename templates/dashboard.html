@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ENCIPHERA - dashboard</title>
+    <style>
+        @font-face {
+            font-family: 'SigmarOne';
+            src: url("{{ url_for('static', filename='fonts/SigmarOne-Regular.ttf') }}") format('truetype');
+            font-weight: bold;
+        }
+
+        @font-face {
+            font-family: 'Nunito';
+            src: url("{{ url_for('static', filename='fonts/Nunito-VariableFont_wght.ttf') }}") format('truetype');
+            font-weight: bold;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Nunito';
+        }
+
+        #heading {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        #heading h2 {
+            margin-bottom: 10px;
+            font-size: 2rem;
+            font-family: 'SigmarOne';
+        }
+
+        #heading p {
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        #buttons_container {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        #start {
+            padding: 12px 30px;
+            font-size: 1rem;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #start:hover {
+            background-color: #333;
+        }
+
+        #card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            padding: 0 20px 50px;
+        }
+
+        #card_container_features,
+        #card_container_workings {
+            text-align: center;
+        }
+
+
+        #card_container_workings h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            margin-right: 700px;
+        }
+
+        #card_container_features h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            margin-right: 835px;
+        }
+
+        #card_container_features .card {
+            display: inline-block;
+            vertical-align: top;
+            background-color: #101010;
+            padding: 20px;
+            margin: 10px;
+            width: 280px;
+            border-radius: 8px;
+            text-align: left;
+            height: 150px;
+        }
+
+        #card_container_workings .card2 {
+            display: inline-block;
+            vertical-align: top;
+            background-color: #101010;
+            padding: 20px;
+            margin: 10px;
+            width: 280px;
+            border-radius: 8px;
+            text-align: left;
+            height: 100px;
+        }
+
+        .card h4,
+        .card2 h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .card p,
+        .card2 p {
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        @media screen and (max-width: 900px) {
+
+            #card_container_features .card,
+            #card_container_workings .card2 {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="heading">
+        <h2>ENCRYPT. PROTECT .CONTROL</h2>
+        <p>Your notes are encrypted on our servers using powerful AES-256 encryption.
+            Only your decryption key unlocks your data.</p>
+    </div>
+
+    <div id="buttons_container">
+        <button id="start">Start Encrypting</button>
+    </div>
+
+    <!--FEATURES-->
+    <div id="card-container">
+        <div id="card_container_features">
+            <h3>Core Features .</h3>
+            <div class="card">
+                <h4>1. Encrypted Notes and Storage</h4>
+                <p>Every note is encrypted on the server using industry-grade AES-256 encryption with a unique per-note
+                    key.</p>
+            </div>
+
+            <div class="card">
+                <h4>2. Zero-Access Guarenteed</h4>
+                <p>Even though encryption happens server-side, the server cannot decrypt without the user’s key. No key
+                    = no access.</p>
+            </div>
+
+            <div class="card">
+                <h4>3. One-Time Key Visibility</h4>
+                <p>Each note generates a unique key. This key is shown ONLY once, forcing secure user handling.</p>
+            </div>
+        </div>
+
+
+        <!--WORKINGS-->
+        <div id="card_container_workings">
+            <h3>How ENCYPHERA Works .</h3>
+            <div class="card2">
+                <h4>1 — Create</h4>
+                <p>Write a note or upload a file in your browser.</p>
+            </div>
+
+            <div class="card2">
+                <h4>2 — Encrypt (Server)</h4>
+                <p>The file is encrypted on the server side</p>
+            </div>
+
+            <div class="card2">
+                <h4>3 — Store & Sync</h4>
+                <p>Ciphertext uploaded to the; only you can decrypt.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

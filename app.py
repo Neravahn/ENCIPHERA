@@ -24,16 +24,16 @@ def signup():
         password = request.form['password']
         
         if user_exists_email(email):
-            return render_template('signup.html', error="E-mail already in use")
+            return render_template('signup.html', error="E-MAIL ALREADY IN USE")
         
         if user_exist_username(username):
-            return render_template('signup.html', error = "Username already in use")
+            return render_template('signup.html', error = "USERNAME ALREADY IN USE")
         
 
 
         otp = send_otp(email)
         if otp is None:
-            return render_template("signup.html", error="OTP cannot be sent")
+            return render_template("signup.html", error="OTP CANNOT BE SENT")
         
         session['signup_otp']= otp
         session['user_data'] = {
@@ -82,6 +82,14 @@ def login():
             return render_template("login.html", error="Incorrect Credentials")
 
     return render_template('login.html')
+
+
+
+
+@app.route('/dashboard', methods = ['GET', 'POST'])
+def dashboard():
+
+    return render_template('dashboard.html')
 
 if __name__ == "__main__":
     app.run(debug=True)
