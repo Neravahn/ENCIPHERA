@@ -32,15 +32,20 @@
             <label for="password">PASSWORD</label>
             <input type="password" id="password" name="password" placeholder="Create a password" required>
 
-            <label for="confirm-password">CONFIRM PASSWORD</label>
+            <label for="confirm_password">CONFIRM PASSWORD</label>
             <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter password"
                 required>
 
             <button type="submit">GET OTP</button>
         </form>
 
-        <div id="errors">
+        <div id="errors" style="display:none; {% if error %}display:block;{% endif %}">
+
+            {% if error %}
+            {{ error }}
+            {% endif %}
         </div>
+
     </div>
 
 
@@ -54,11 +59,12 @@
 
         form.addEventListener('submit', function (event) {
             errorDiv.innerHTML = "";
+            errorDiv.style.display = "none";
 
 
             let errors = []
             if (password.value !== confirm_password.value) {
-                errors.push('PASSSWORD DO NOT MATCH');
+                errors.push('PASSSWORDS DO NOT MATCH');
             }
 
             if (errors.length > 0) {

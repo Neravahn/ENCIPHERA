@@ -30,8 +30,13 @@
 
             <button type="submit">Sign Up</button>
         </form>
-        <div id="errors">
+        <div id="errors" style="display:none; {% if error %}display:block;{% endif %}">
+
+            {% if error %}
+            {{ error }}
+            {% endif %}
         </div>
+    </div>
     </div>
 
 

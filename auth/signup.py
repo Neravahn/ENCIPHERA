@@ -22,7 +22,6 @@ def save_user(name, username, email, password):
         cursor.execute(query, data)
         conn.commit()
         print("done")
-        
     except sqlite3.IntegrityError as e:
 
         error_message = str(e)

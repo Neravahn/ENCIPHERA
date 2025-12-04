@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, redirect
 from auth.signup import save_user
 from auth.login import verify_user
 from auth.email_service import send_otp
+from auth.checkuser import user_exist_username, user_exists_email
 
 
 
@@ -22,10 +23,17 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         
-        otp = send_otp(email)
+        if user_exists_email(email):
+            return render_template('signup.html', error="E-mail already in use")
         
+        if user_exist_username(username):
+            return render_template('signup.html', error = "Username already in use")
+        
+
+
+        otp = send_otp(email)
         if otp is None:
-            return {"error": "OTP cannont be sent"}
+            return render_template("signup.html", error="OTP cannot be sent")
         
         session['signup_otp']= otp
         session['user_data'] = {
@@ -54,7 +62,8 @@ def verify_otp():
             save_user(**data)
             return redirect('/login')
         else:
-            return {"error": "INCORRECT OTP"}
+            return render_template("verify_otp.html", error="INCORRECT OTP")
+
 
     return render_template('verify_otp.html')
 
@@ -70,7 +79,7 @@ def login():
         if verified:
             return redirect('/dashboard')
         else:
-            return {"error": "Incorrect Credentials"}
+            return render_template("login.html", error="Incorrect Credentials")
 
     return render_template('login.html')
 

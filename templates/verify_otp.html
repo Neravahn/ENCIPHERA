@@ -119,7 +119,12 @@
             <button id="submitBtn" type="submit">VERIFY</button>
         </form>
 
-        <div id="error"></div>
+        <div id="errors" style="display:none; {% if error %}display:block;{% endif %}">
+
+            {% if error %}
+            {{ error }}
+            {% endif %}
+        </div>
     </div>
 
 </body>
