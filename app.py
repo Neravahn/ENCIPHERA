@@ -3,7 +3,9 @@ from auth.signup import save_user
 from auth.login import verify_user
 from auth.email_service import send_otp
 from auth.checkuser import user_exist_username, user_exists_email
-
+from crypto_engine.encryption import encrypt
+from crypto_engine.decryption import decrypt
+from crypto_engine.keygen import generate_key
 
 
 
@@ -102,8 +104,26 @@ def editor():
         data = request.get_json()
         text = data.get('text')
 
-        print("Received:", text)
+        key = generate_key()
+        key_bytes = [ord(c) for c in key]
+        data_to = text.encode('utf-8')
+
+        encrypted = encrypt(data_to, key_bytes)
+        decrypted = decrypt(encrypted, key_bytes)
+
+
+        print("real text", text)
+        print("encrypted", encrypted)
+        print("decrypted", decrypted)
+        print(key)
         return {"status": "success", "message": "Saved!"}
+    
+
+
+@app.route('/file_manager', methods= ['GET', 'POST'])
+def file_manager():
+    
+    return render_template('file_manager.html')
 
 
 if __name__ == "__main__":

@@ -289,6 +289,11 @@
         #success.show {
             display: block;
         }
+
+        #file_manager img {
+            width: 25px;
+            height: 25px;
+        }
     </style>
 
 </head>
@@ -316,6 +321,11 @@
         <button id="upload_file">
             <img src="{{ url_for('static', filename='images/upload.png') }}" alt="upload">
             Upload File
+        </button>
+
+        <button id="file_manager" onclick="window.location.href='{{url_for ('file_manager') }}'">
+            <img src="{{url_for('static', filename='images/file_manager.png') }}" alt="File_manager">
+            File Manager
         </button>
     </div>
 
