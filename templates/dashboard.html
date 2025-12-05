@@ -48,7 +48,46 @@
         #buttons_container {
             text-align: center;
             margin-bottom: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
         }
+
+        #buttons_container button {
+            padding: 12px 30px;
+            font-size: 1rem;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            font-family: 'Nunito';
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #buttons_container button:hover {
+            background-color: #dcdcdc;
+        }
+
+        #start_encrypting::after {
+            content: '→';
+            margin-left: 10px;
+            transition: 0.3s;
+        }
+
+        #start_encrypting:hover::after {
+            margin-left: 20px;
+        }
+
+        #upload_file img {
+            width: 22px;
+            height: 22px;
+        }
+
 
         #card-container {
             display: flex;
@@ -157,6 +196,95 @@
         #start:hover::after {
             margin-left: 20px;
         }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #000000;
+            border: 1px solid #ffffff20;
+            padding: 30px;
+            width: 320px;
+            border-radius: 10px;
+            z-index: 1001;
+            color: #ffffff;
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+        }
+
+        #popup label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        #popup select,
+        #popup input {
+            width: 100%;
+            padding: 8px;
+            border: none;
+            background: #181818;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        #popup button {
+            margin-top: 15px;
+            padding: 10px;
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+        }
+
+        #errors {
+            margin-top: 15px;
+            padding: 10px;
+
+            background: rgba(255, 0, 0, 0.12);
+            border-left: 3px solid #ff4d4d;
+
+            color: #ff4d4d;
+            font-size: 0.9rem;
+            font-weight: 600;
+
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+
+            display: none;
+        }
+
+        #success {
+            margin-top: 15px;
+            padding: 10px;
+
+            background: rgba(255, 0, 0, 0.12);
+            border-left: 3px solid #4dff53;
+
+            color: #4dff53;
+            font-size: 0.9rem;
+            font-weight: 600;
+
+            border-radius: 6px;
+            letter-spacing: 0.5px;
+
+            display: none;
+        }
     </style>
 
 </head>
@@ -172,13 +300,54 @@
     </header>
     <div id="heading">
         <h2>ENCRYPT. PROTECT .CONTROL</h2>
-        <p>Your notes are encrypted on our servers using powerful AES-256 encryption.
+        <p>Your files are encrypted on our servers using powerful AES-256 encryption.
             Only your decryption key unlocks your data.</p>
     </div>
 
     <div id="buttons_container">
-        <button id="start">Start Encrypting</button>
+        <button id="start_encrypting" onclick="window.location.href='{{ url_for('editor') }}'">
+            Start Encrypting
+        </button>
+
+        <button id="upload_file">
+            <img src="{{ url_for('static', filename='images/upload.png') }}" alt="upload">
+            Upload File
+        </button>
     </div>
+
+
+    <div id="popup">
+        <label for="file_format">Select file format</label>
+        <select id="file_format">
+            <option value="txt">.txt (Text File)</option>
+            <option value="pdf">.pdf (PDF Document)</option>
+            <option value="png">.png (Image)</option>
+            <option value="zip">.zip (Archive)</option>
+        </select>
+
+        <label for="file_name">ENTER NAME</label>
+        <input id="file_name" type="text">
+
+
+        <label for="input_file">UPLOAD FILE</label>
+        <input type="file" id="input_file">
+
+        <button id="encrypt">ENCRYPT</button>
+
+        <div id="error">
+            {% if error %}
+            {{ error }}
+            {% endif %}
+        </div>
+
+        <div id="success">
+            {% if success %}
+            {{ success }}
+            {% endif %}
+        </div>
+    </div>
+
+
 
     <!--FEATURES-->
     <div id="card-container">
@@ -186,7 +355,7 @@
             <h3>Core Features .</h3>
             <div class="card">
                 <h4>1. Encrypted Notes and Storage</h4>
-                <p>Every note is encrypted on the server using industry-grade AES-256 encryption with a unique per-note
+                <p>Every file is encrypted on the server using industry-grade AES-256 encryption with a unique per-note
                     key.</p>
             </div>
 
@@ -222,6 +391,26 @@
             </div>
         </div>
     </div>
+
+    <div id="overlay"></div>
+
+
+    <!--script-->
+    <script>
+        const uploadBtn = document.getElementById("upload_file");
+        const popup = document.getElementById("popup");
+        const overlay = document.getElementById("overlay");
+
+        uploadBtn.onclick = () => {
+            popup.style.display = "block";
+            overlay.style.display = "block";
+        };
+
+        overlay.onclick = () => {
+            popup.style.display = "none";
+            overlay.style.display = "none";
+        };
+    </script>
 
 </body>
 
