@@ -55,12 +55,36 @@
 </head>
 
 <body>
-    <textarea placeholder="Start Typing..."></textarea>
+    <textarea id="text" placeholder="Start Typing..."></textarea>
 
     <div id="button-container">
         <button id="back">BACK</button>
         <button id="done">SAVE</button>
     </div>
+
+
+    <!--SCRIPT-->
+    <script>
+    document.getElementById('done').addEventListener('click',() => {
+        const text = document.getElementById('text').value;
+
+        fetch('/editor', {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+
+            body: JSON.stringify({text : text})
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Saved Successfully");
+            console.log(data);
+        });
+    });
+
+    document.getElementById('back').addEventListener('click', () => {
+        window.location.href='/dashboard';
+    })
+    </script>
 </body>
 
 </html>

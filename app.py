@@ -95,7 +95,15 @@ def dashboard():
 
 @app.route('/editor', methods = ['GET', 'POST'])
 def editor():
-    return render_template('editor.html')
+    if request.method == 'GET':
+        return render_template('editor.html')
+    
+    if request.method == 'POST':
+        data = request.get_json()
+        text = data.get('text')
+
+        print("Received:", text)
+        return {"status": "success", "message": "Saved!"}
 
 
 if __name__ == "__main__":

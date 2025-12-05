@@ -19,7 +19,6 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #000000;
@@ -273,7 +272,7 @@
             margin-top: 15px;
             padding: 10px;
 
-            background: rgba(255, 0, 0, 0.12);
+            background: rgba(0, 255, 0, 0.12);
             border-left: 3px solid #4dff53;
 
             color: #4dff53;
@@ -284,6 +283,11 @@
             letter-spacing: 0.5px;
 
             display: none;
+        }
+
+        #error.show,
+        #success.show {
+            display: block;
         }
     </style>
 
@@ -334,17 +338,14 @@
 
         <button id="encrypt">ENCRYPT</button>
 
-        <div id="error">
-            {% if error %}
+        <div id="error" class="{% if error %}show{% endif %}">
             {{ error }}
-            {% endif %}
         </div>
 
-        <div id="success">
-            {% if success %}
+        <div id="success" class="{% if success %}show{% endif %}">
             {{ success }}
-            {% endif %}
         </div>
+
     </div>
 
 
