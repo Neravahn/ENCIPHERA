@@ -6,6 +6,8 @@ from auth.checkuser import user_exist_username, user_exists_email
 from crypto_engine.encryption import encrypt
 from crypto_engine.decryption import decrypt
 from crypto_engine.keygen import generate_key
+from file_manager.save_file import save
+from file_manager.fetch_files import fetch
 
 
 
@@ -101,28 +103,62 @@ def editor():
         return render_template('editor.html')
     
     if request.method == 'POST':
+        
+
+        #GETTING THE DATA FROM THE FRONT END
         data = request.get_json()
         text = data.get('text')
+        file_name = data.get('file_name')
+        file_type = '.txt'
 
+        #PREPARING TH DETAILS TO SAVE 
         key = generate_key()
         key_bytes = [ord(c) for c in key]
-        data_to = text.encode('utf-8')
+        encoded_text = text.encode('utf-8')
+        username = session.get('username')
+        encrypted_text = encrypt(encoded_text, key_bytes)
 
-        encrypted = encrypt(data_to, key_bytes)
-        decrypted = decrypt(encrypted, key_bytes)
+        #SAVING AND ERROR HANDLING
+        isSaved = save(username, file_name, file_type, encrypted_text)
 
+        if isSaved:
+            return {"success": True, "message": "Saved Successfully"}
 
-        print("real text", text)
-        print("encrypted", encrypted)
-        print("decrypted", decrypted)
-        print(key)
-        return {"status": "success", "message": "Saved!"}
+        
+        else:
+            return {"success": False, "message": "Something went wrong"}
+
     
 
+@app.route('/upload_file', methods = ['GET', 'POST'])
+def upload_file():
+
+    return
 
 @app.route('/file_manager', methods= ['GET', 'POST'])
 def file_manager():
-    
+    if request.method == 'POST':
+        data = request.get_json()
+        file_type = data.get('file_type')
+        username = session.get('username')
+
+        if file_type == None:
+            file_type = '.txt'
+
+        files = fetch(username)
+
+
+
+        if files == None:
+            return {"message" : f"No {file_type} files found"}
+        
+        file_names = []
+        for i in range(len(files)):
+            file_names.append(files[i][0])
+
+        
+
+
     return render_template('file_manager.html')
 
 
