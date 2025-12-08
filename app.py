@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, jsonify
 from auth.signup import save_user
 from auth.login import verify_user
 from auth.email_service import send_otp
@@ -139,26 +139,25 @@ def upload_file():
 def file_manager():
     if request.method == 'POST':
         data = request.get_json()
-        file_type = data.get('file_type')
         username = session.get('username')
 
-        if file_type == None:
-            file_type = '.txt'
+        if "file_type" in data:
+            file_type = data.get('file_type')
+            files = fetch(username, file_type)
 
-        files = fetch(username)
+            if not files:
+                return jsonify({"file_names": []})
+            
+            for i in files:
+                file_names = files[i][0]
 
-
-
-        if files == None:
-            return {"message" : f"No {file_type} files found"}
-        
-        file_names = []
-        for i in range(len(files)):
-            file_names.append(files[i][0])
-
+            return jsonify({'file_names': file_names})
         
 
+        action = data.get('action')
+        file_name = data.get('file_name')
 
+        if action
     return render_template('file_manager.html')
 
 

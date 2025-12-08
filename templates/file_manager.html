@@ -17,6 +17,7 @@
             src: url("{{ url_for('static', filename='fonts/Nunito-VariableFont_wght.ttf') }}") format('truetype');
             font-weight: bold;
         }
+
         body {
             background: #000;
             color: #fff;
@@ -61,13 +62,68 @@
             color: #000000;
         }
 
-        #file_area {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-            gap: 15px;
+        #fileArea {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
         }
 
 
+        .file-card {
+            background: #1c1c1c;
+            border: 1px solid #333;
+            padding: 18px 20px;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            min-height: 50px;
+            transition: 0.25s ease;
+            border-left: 4px solid #6b6b6b;
+            margin-bottom: 15px;
+        }
+
+        .file-card:hover {
+            background: #0f0f0f;
+            border-left-color: #aaa;
+            transform: translateY(-2px);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            font-weight: 700;
+        }
+
+
+        .btn-delete {
+            background: #ff3b3b;
+            color: white;
+        }
+
+        .btn-download {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-decrypt {
+            background: #22c55e;
+            color: white;
+        }
     </style>
 </head>
 
@@ -76,10 +132,10 @@
         <h2>Your Encrypted Files</h2>
         <div id="header">
             <select id="file_type">
-                <option value="txt">.txt (Text File)</option>
-                <option value="pdf">.pdf (PDF Document)</option>
-                <option value="png">.png (Image)</option>
-                <option value="zip">.zip (Archive)</option>
+                <option value=".txt">.txt (Text File)</option>
+                <option value=".pdf">.pdf (PDF Document)</option>
+                <option value=".png">.png (Image)</option>
+                <option value=".zip">.zip (Archive)</option>
             </select>
         </div>
 
@@ -87,6 +143,116 @@
 
         </div>
     </div>
+
+
+
+    <!--SCRIPT-->
+    <script>
+        fetch('/file_manager', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ file_type: fileType })
+        })
+            .then(res => res.json())
+            .then(data => {
+                fileArea.innerHTML = '';
+
+
+                const fileNames = data.file_names || [];
+                if (fileNames.length === 0) {
+                    fileArea.innerHTML = "<p>No files found</p>";
+                    return;
+                }
+
+
+                fileNames.forEach(name => {
+                    const card = document.createElement('div');
+                    card.classList.add('file-card');
+
+
+                    const nameText = document.createElement('span');
+                    nameText.textContent = name;
+
+
+                    const btnGroup = document.createElement('div');
+                    btnGroup.classList.add('btn-group');
+
+
+                    const btnDelete = document.createElement('button');
+                    btnDelete.className = 'btn btn-delete';
+                    btnDelete.textContent = 'Delete';
+                    btnDelete.onclick = () => deleteFile(name);
+
+
+                    const btnDownload = document.createElement('button');
+                    btnDownload.className = 'btn btn-download';
+                    btnDownload.textContent = 'Download';
+                    btnDownload.onclick = () => downloadFile(name);
+
+
+                    const btnDecrypt = document.createElement('button');
+                    btnDecrypt.className = 'btn btn-decrypt';
+                    btnDecrypt.textContent = 'Decrypt & Download';
+                    btnDecrypt.onclick = () => decryptAndDownload(name);
+
+
+                    btnGroup.append(btnDecrypt, btnDownload, btnDelete);
+                    card.append(nameText, btnGroup);
+                    fileArea.appendChild(card);
+                });
+            })
+            .catch(err => console.error(err));
+}
+
+
+        function deleteFile(name) {
+            fetch('/file_manager', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'delete', file_name: name })
+            }).then(() => loadFiles());
+        }
+
+
+        function downloadFile(name) {
+            fetch('/file_manager', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'download', file_name: name })
+            })
+                .then(res => res.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = name;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                });
+        }
+
+
+        function decryptAndDownload(name) {
+            fetch('/file_manager', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'decrypt_download', file_name: name })
+            })
+                .then(res => res.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = name;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                });
+        }
+
+
+        fileTypeSelect.addEventListener('change', loadFiles);
+        window.onload = loadFiles;
+    </script>
 </body>
 
 </html>
