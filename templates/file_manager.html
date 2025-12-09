@@ -111,18 +111,18 @@
 
 
         .btn-delete {
-            background: #ff3b3b;
-            color: white;
+            background: #ffffff;
+            color: rgb(0, 0, 0);
         }
 
         .btn-download {
-            background: #3b82f6;
-            color: white;
+            background: #ffffff;
+            color: rgb(0, 0, 0);
         }
 
         .btn-decrypt {
-            background: #22c55e;
-            color: white;
+            background: #ffffff;
+            color: rgb(0, 0, 0);
         }
     </style>
 </head>
@@ -148,100 +148,79 @@
 
     <!--SCRIPT-->
     <script>
-        fetch('/file_manager', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ file_type: fileType })
-        })
-            .then(res => res.json())
-            .then(data => {
-                fileArea.innerHTML = '';
 
+        const fileTypeSelect = document.getElementById('file_type');
+        const fileArea = document.getElementById('file_area');
 
-                const fileNames = data.file_names || [];
-                if (fileNames.length === 0) {
-                    fileArea.innerHTML = "<p>No files found</p>";
-                    return;
-                }
+        function loadFiles() {
+            const fileType = fileTypeSelect.value;
 
-
-                fileNames.forEach(name => {
-                    const card = document.createElement('div');
-                    card.classList.add('file-card');
-
-
-                    const nameText = document.createElement('span');
-                    nameText.textContent = name;
-
-
-                    const btnGroup = document.createElement('div');
-                    btnGroup.classList.add('btn-group');
-
-
-                    const btnDelete = document.createElement('button');
-                    btnDelete.className = 'btn btn-delete';
-                    btnDelete.textContent = 'Delete';
-                    btnDelete.onclick = () => deleteFile(name);
-
-
-                    const btnDownload = document.createElement('button');
-                    btnDownload.className = 'btn btn-download';
-                    btnDownload.textContent = 'Download';
-                    btnDownload.onclick = () => downloadFile(name);
-
-
-                    const btnDecrypt = document.createElement('button');
-                    btnDecrypt.className = 'btn btn-decrypt';
-                    btnDecrypt.textContent = 'Decrypt & Download';
-                    btnDecrypt.onclick = () => decryptAndDownload(name);
-
-
-                    btnGroup.append(btnDecrypt, btnDownload, btnDelete);
-                    card.append(nameText, btnGroup);
-                    fileArea.appendChild(card);
-                });
+            fetch('/file_manager', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: "list", file_type: fileType })
             })
-            .catch(err => console.error(err));
-}
+                .then(res => res.json())
+                .then(data => {
+
+                    fileArea.innerHTML = '';
+
+                    const fileNames = data.file_names || [];
+
+                    if (fileNames.length === 0) {
+                        fileArea.innerHTML = "<p>No files found</p>";
+                        return;
+                    }
+
+                    fileNames.forEach(name => {
+                        const card = document.createElement('div');
+                        card.classList.add('file-card');
+
+                        const nameText = document.createElement('span');
+                        nameText.textContent = name;
+
+                        const btnGroup = document.createElement('div');
+                        btnGroup.classList.add('btn-group');
+
+                        const btnDelete = document.createElement('button');
+                        btnDelete.className = 'btn btn-delete';
+                        btnDelete.textContent = 'Delete';
+                        btnDelete.onclick = () => deleteFile(name);
+
+                        const btnDecrypt = document.createElement('button');
+                        btnDecrypt.className = 'btn btn-decrypt';
+                        btnDecrypt.textContent = 'Decrypt & Download';
+                        btnDecrypt.onclick = () => decryptAndDownload(name);
+
+                        btnGroup.append(btnDecrypt, btnDelete);
+                        card.append(nameText, btnGroup);
+                        fileArea.appendChild(card);
+                    });
+
+                })
+                .catch(err => console.error(err));
+        }
 
 
         function deleteFile(name) {
             fetch('/file_manager', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'delete', file_name: name })
+                body: JSON.stringify({ action: "delete", file_name: name })
             }).then(() => loadFiles());
-        }
-
-
-        function downloadFile(name) {
-            fetch('/file_manager', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'download', file_name: name })
-            })
-                .then(res => res.blob())
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = name;
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                });
         }
 
 
         function decryptAndDownload(name) {
             fetch('/file_manager', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'decrypt_download', file_name: name })
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: "decrypt_download", file_name: name })
             })
                 .then(res => res.blob())
                 .then(blob => {
                     const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
+                    const a = document.createElement("a");
                     a.href = url;
                     a.download = name;
                     a.click();
@@ -249,10 +228,11 @@
                 });
         }
 
-
         fileTypeSelect.addEventListener('change', loadFiles);
         window.onload = loadFiles;
+
     </script>
+
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, jsonify
+from flask import Flask, render_template, request, session, redirect, jsonify, Response
 from auth.signup import save_user
 from auth.login import verify_user
 from auth.email_service import send_otp
@@ -8,6 +8,8 @@ from crypto_engine.decryption import decrypt
 from crypto_engine.keygen import generate_key
 from file_manager.save_file import save
 from file_manager.fetch_files import fetch
+from file_manager.user_file import get_user_files
+from file_manager.delete_file import delete
 
 
 
@@ -122,7 +124,7 @@ def editor():
         isSaved = save(username, file_name, file_type, encrypted_text)
 
         if isSaved:
-            return {"success": True, "message": "Saved Successfully"}
+            return {"success": True, "message": f"Saved Successfully, Your Key: {key} (NOTE: This key will be desplayed only once)"}
 
         
         else:
@@ -148,8 +150,10 @@ def file_manager():
             if not files:
                 return jsonify({"file_names": []})
             
-            for i in files:
-                file_names = files[i][0]
+            file_names= []
+            for i in range(len(files)):
+                file = files[i][0]
+                file_names.append(file)
 
             return jsonify({'file_names': file_names})
         
@@ -157,7 +161,22 @@ def file_manager():
         action = data.get('action')
         file_name = data.get('file_name')
 
-        if action
+        if action == 'delete':
+            delete(username, file_name)
+            return jsonify({"status": "Deleted"})
+
+        
+        elif action == 'decrypt_download':
+            file = get_user_files(username, file_name)
+            decrypted_file = decrypt(file)
+            return Response(
+                decrypted_file,
+                headers = {
+                    "Content-Disposition":f"attachment; filename={file_name}"
+                },
+                mimetype="application/octet-stream"
+            )
+
     return render_template('file_manager.html')
 
 
