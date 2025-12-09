@@ -334,10 +334,10 @@
         <label for="file_format">Select file format</label>
         <select id="file_format">
             <option value="" disabled>Select file type</option>
-            <option value="txt">.txt (Text File)</option>
-            <option value="pdf">.pdf (PDF Document)</option>
-            <option value="png">.png (Image)</option>
-            <option value="zip">.zip (Archive)</option>
+            <option value=".txt">.txt (Text File)</option>
+            <option value=".pdf">.pdf (PDF Document)</option>
+            <option value=".png">.png (Image)</option>
+            <option value=".zip">.zip (Archive)</option>
         </select>
 
         <label for="file_name">ENTER NAME</label>
@@ -349,13 +349,18 @@
 
         <button id="encrypt">ENCRYPT</button>
 
-        <div id="error" class="{% if error %}show{% endif %}">
+        <div id="error" style="display:none; {% if error %}display:block;{% endif %}">
+            {% if error %}
             {{ error }}
+            {% endif %}
         </div>
 
-        <div id="success" class="{% if success %}show{% endif %}">
+        <div id="success" style="display:none; {% if success %}display:block;{% endif %}">
+            {% if success %}
             {{ success }}
+            {% endif %}
         </div>
+
 
     </div>
 
@@ -412,6 +417,40 @@
         const uploadBtn = document.getElementById("upload_file");
         const popup = document.getElementById("popup");
         const overlay = document.getElementById("overlay");
+
+        document.getElementById('encrypt').addEventListener('click', () => {
+            const fileFormant = document.getElementById('file_format').value;
+            const inputFile = document.getElementById('input_file').files[0];
+            const fileName = document.getElementById('file_name').value;
+
+            const formData = new FormData();
+            formData.append('fileFormat', fileFormant);
+            formData.append('fileName', fileName);
+            formData.append('inputFile', inputFile);
+
+            fetch('/upload_file', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+
+                    const errBox = document.getElementById("error");
+                    const successBox = document.getElementById("success");
+
+                    if (data.success) {
+                        successBox.textContent = data.message;
+                        successBox.style.display = "block";
+                        errBox.style.display = "none";
+                    } else {
+                        errBox.textContent = data.message;
+                        errBox.style.display = "block";
+                        successBox.style.display = "none";
+                    }
+                });
+
+        });
 
         uploadBtn.onclick = () => {
             popup.style.display = "block";

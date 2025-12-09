@@ -132,10 +132,29 @@ def editor():
 
     
 
-@app.route('/upload_file', methods = ['GET', 'POST'])
+@app.route('/upload_file', methods = ['POST'])
 def upload_file():
+    file_format = request.form.get('fileFormat')
+    file_name = request.form.get('fileName')
+    file = request.files['inputFile'].read()
+    key = generate_key()
+    key_bytes = [ord(c) for c in key]
+    username = session.get('username')
 
-    return
+
+    #FOR DEV PHASE
+    print(file)
+    print(file_name)
+    print(file_format)
+
+    encrypted = encrypt(file, key_bytes)
+    saved = save(username, file_name, file_format, encrypted)
+
+    if saved:
+        return {'success': True, 'message':f'File Saved!, KEY: {key}'}
+    else:
+        return {'success': False, 'message': 'Unable to save'}
+
 
 @app.route('/file_manager', methods= ['GET', 'POST'])
 def file_manager():
