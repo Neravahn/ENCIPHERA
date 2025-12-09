@@ -167,8 +167,14 @@ def file_manager():
 
         
         elif action == 'decrypt_download':
-            file = get_user_files(username, file_name)
-            decrypted_file = decrypt(file)
+            key = data.get('key').encode('utf-8')
+            encypted_file = get_user_files(username, file_name)
+            decrypted_file = decrypt(encypted_file, key)
+
+            #ONLY FOR DEV PHSE
+            print(key)
+            print(encypted_file)
+            print(decrypted_file)
             return Response(
                 decrypted_file,
                 headers = {

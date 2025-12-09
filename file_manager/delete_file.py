@@ -8,6 +8,8 @@ def delete(username, file_name):
     cursor = conn.cursor()
 
     query = "DELETE FROM files WHERE username = ? and filename = ?"
-    cursor.execute()
+    cursor.execute(query, (username, file_name))
+
+    conn.commit()
     cursor.close()
     conn.close()

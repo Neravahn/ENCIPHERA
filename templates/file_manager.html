@@ -212,21 +212,40 @@
 
 
         function decryptAndDownload(name) {
+            const key = prompt("Enter your decryption key:");
+
+            if (!key) {
+                alert("Decryption cancelled");
+                return;
+            }
+
             fetch('/file_manager', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: "decrypt_download", file_name: name })
+                body: JSON.stringify({
+                    action: "decrypt_download",
+                    file_name: name,
+                    key: key
+                })
             })
-                .then(res => res.blob())
+                .then(res => {
+                    if (!res.ok) throw new Error("Wrong key or server error");
+                    return res.blob();
+                })
                 .then(blob => {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = name;
+                    a.download = name; 
                     a.click();
                     window.URL.revokeObjectURL(url);
+                })
+                .catch(err => {
+                    alert("Decryption failed");
+                    console.error(err);
                 });
         }
+
 
         fileTypeSelect.addEventListener('change', loadFiles);
         window.onload = loadFiles;
