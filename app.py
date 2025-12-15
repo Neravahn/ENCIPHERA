@@ -132,10 +132,9 @@ def editor():
 
         #PREPARING TH DETAILS TO SAVE 
         key = generate_key()
-        key_bytes = [ord(c) for c in key]
         encoded_text = text.encode('utf-8')
         username = session.get('username')
-        encrypted_text = encrypt(encoded_text, key_bytes)
+        encrypted_text = encrypt(encoded_text, key.encode('utf-8'))
 
         #SAVING AND ERROR HANDLING
         isSaved = save(username, file_name, file_type, encrypted_text)
@@ -165,8 +164,7 @@ def upload_file():
 
     file_name = request.form.get('fileName')
     file = request.files['inputFile'].read()
-    key = generate_key().encode('utf-8')
-    encrypted = encrypt(file, key)
+    key = generate_key()
 
     username = session.get('username')
 
@@ -176,7 +174,7 @@ def upload_file():
     print(file_name)
     print(file_format)
 
-    encrypted = encrypt(file, key)
+    encrypted = encrypt(file, key.encode('utf-8'))
     saved = save(username, file_name, file_format, encrypted)
 
     if saved:
@@ -216,6 +214,7 @@ def file_manager():
 
         
         elif action == 'decrypt_download':
+            file_type = data.get('file_type')
             key = data.get('key').encode('utf-8')
             encypted_file = get_user_files(username, file_name)
             decrypted_file = decrypt(encypted_file, key)
@@ -247,7 +246,7 @@ def forgetPassword():
             session['fp_otp'] = otp
             session['email_fp'] = email_input
             return redirect('/verify_fpotp')
-        elif user_exist_username == True:
+        elif user_exist_username(username_input) == True:
             user_email = getEmail(username_input)
             otp = send_otp(user_email)
             session['fp_otp'] = otp

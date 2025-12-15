@@ -334,11 +334,18 @@
     <div id="popup">
         <label for="file_format">Select file format</label>
         <select id="file_format">
-            <option value="" disabled>Select file type</option>
+            <option value="" disabled selected>Select file type</option>
             <option value=".txt">.txt (Text File)</option>
             <option value=".pdf">.pdf (PDF Document)</option>
             <option value=".png">.png (Image)</option>
             <option value=".zip">.zip (Archive)</option>
+            <option value=".mp3">.mp3 (Audio)</option>
+            <option value=".wav">.wav (Audio)</option>
+            <option value=".ogg">.ogg (Audio)</option>
+            <option value=".mp4">.mp4 (Video)</option>
+            <option value=".mkv">.mkv (Video)</option>
+            <option value=".webm">.webm (Video)</option>
+
         </select>
 
         <label for="file_name">ENTER NAME</label>
@@ -456,12 +463,22 @@
         uploadBtn.onclick = () => {
             popup.style.display = "block";
             overlay.style.display = "block";
+            resetPopup();
         };
 
         overlay.onclick = () => {
             popup.style.display = "none";
             overlay.style.display = "none";
         };
+        function resetPopup() {
+            document.getElementById("error").style.display = "none";
+            document.getElementById("success").style.display = "none";
+            document.getElementById("error").textContent = "";
+            document.getElementById("success").textContent = "";
+            document.getElementById("file_format").selectedIndex = 0;
+            document.getElementById("file_name").value = "";
+            document.getElementById("input_file").value = "";
+        }
     </script>
 
 </body>
