@@ -94,11 +94,12 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        session['username'] = username
+        
 
         verified = verify_user(username, password)
 
         if verified:
+            session['username'] = username
             return redirect('/dashboard')
         else:
             return render_template("login.html", error="Incorrect Credentials")
@@ -237,36 +238,41 @@ def file_manager():
 @app.route('/forgetPassword', methods = ['GET', 'POST'])
 def forgetPassword():
     if request.method == 'POST':
-        username = request.get['username']
-        email = request.get['email']
+        username_input = request.form['username']
+        email_input = request.form['email']
 
-        username = user_exist_username(username)
-        email = user_exists_email(email)
 
-        session['email_fpverify'] = email
-        session['username_fpverify'] = username
-        if username == None or email == None:
-            return render_template('forgetPassword.html', error = "No such user, Sign Up?")
+        if user_exists_email(email_input) == True:
+            otp = send_otp(email_input)
+            session['fp_otp'] = otp
+            session['email_fp'] = email_input
+            return redirect('/verify_fpotp')
+        elif user_exist_username == True:
+            user_email = getEmail(username_input)
+            otp = send_otp(user_email)
+            session['fp_otp'] = otp
+            session['usernam_fp'] = username_input
+            return redirect('/verify_fpotp')
         
         else:
-            otp = send_otp(email)
-            session['fp_otp'] = otp
-            return redirect('/verify_fpotp')
+            return render_template('forgetPassword.html', error ="No such user")
 
     return render_template('forgetPassword.html')
 
 @app.route('/verify_fpotp', methods = ['GET', 'POST'])
 def verify_fp_otp():
     if request.method == 'POST':
-        username = session.get('username_fpverify')
-        email = session.get()('email_fpverify')
-        password = request.get('password')
+        password = request.form['password']
+        fp_otp = session.get('fp_otp')
+        user_otp = request.form['otp']
+        username = session.get('username_fp')
+        email = session.get('email_fp')
 
-        if email:
-            done = changePassEmail(email, password)
-        elif username:
-            getemail = getEmail(username)
-            done = changePassUsername(username, password)
+        if user_otp == fp_otp:
+            if email is not None:
+                done = changePassEmail(email, password)
+            elif username is not None:
+                done = changePassUsername(username, password)
 
 
         if done:

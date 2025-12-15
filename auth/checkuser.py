@@ -23,3 +23,7 @@ def user_exist_username(username):
     cursor.execute(query, (username,))
 
     return cursor.fetchone() is not None
+
+
+
+print(user_exists_email('prashantc48774.r@gmail.com'))
