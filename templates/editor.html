@@ -90,7 +90,7 @@
         }
 
         #error {
-            width: 100%;
+            width: 97%;
             padding: 12px 20px;
             color: #ff4d4d;
             background-color: #1a0000;
@@ -101,7 +101,7 @@
         }
 
         #success {
-            width: 100%;
+            width: 97%;
             padding: 12px 20px;
             color: #4dff4d;
             background-color: #001a00;
@@ -160,6 +160,9 @@
                     if (data.success) {
                         document.getElementById("success").innerText = data.message;
                         document.getElementById("success").style.display = "block";
+
+                        document.getElementById("text").value = "";
+                        document.getElementById("file_name").value = "";
                     } else {
                         document.getElementById("error").innerText = data.message;
                         document.getElementById("error").style.display = "block";

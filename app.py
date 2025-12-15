@@ -12,6 +12,7 @@ from file_manager.user_file import get_user_files
 from file_manager.delete_file import delete
 from functools import wraps
 from auth.changePass import changePassEmail, changePassUsername, getEmail
+from file_manager.fileName import check_fileName
 
 
 app = Flask(__name__)
@@ -136,6 +137,10 @@ def editor():
         username = session.get('username')
         encrypted_text = encrypt(encoded_text, key.encode('utf-8'))
 
+        #CHECKING FILE NAME
+        if check_fileName(file_name, username) == False:
+            return {"success": False, "message": "A File with this name already exists, choose another name"}
+
         #SAVING AND ERROR HANDLING
         isSaved = save(username, file_name, file_type, encrypted_text)
 
@@ -165,8 +170,11 @@ def upload_file():
     file_name = request.form.get('fileName')
     file = request.files['inputFile'].read()
     key = generate_key()
-
     username = session.get('username')
+
+    if check_fileName(file_name, username) == False:
+        return {"success": False, "message": "A File with this name already exists, choose another name"}
+    
 
 
     #FOR DEV PHASE
