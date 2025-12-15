@@ -176,14 +176,9 @@ def upload_file():
         return {"success": False, "message": "A File with this name already exists, choose another name"}
     
 
-
-    #FOR DEV PHASE
-    print(file)
-    print(file_name)
-    print(file_format)
-
     encrypted = encrypt(file, key.encode('utf-8'))
-    saved = save(username, file_name, file_format, encrypted)
+    filename = f"{file_name}{file_format}"
+    saved = save(username, filename, file_format, encrypted)
 
     if saved:
         return {'success': True, 'message':f'File Saved!, KEY: {key}'}
@@ -228,9 +223,6 @@ def file_manager():
             decrypted_file = decrypt(encypted_file, key)
 
             #ONLY FOR DEV PHSE
-            print(key)
-            print(encypted_file)
-            print(decrypted_file)
             return Response(
                 decrypted_file,
                 headers = {

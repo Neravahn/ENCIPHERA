@@ -67,12 +67,13 @@
             flex-direction: column;
             gap: 12px;
             width: 100%;
+            align-items: center;
         }
 
 
         .file-card {
-            background: #1c1c1c;
-            border: 1px solid #333;
+            background: #000000;
+            border: 2px solid #181818;
             padding: 18px 20px;
             border-radius: 14px;
             color: #fff;
@@ -81,16 +82,14 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            width: 100%;
+            width: 90%;
             min-height: 50px;
             transition: 0.25s ease;
-            border-left: 4px solid #6b6b6b;
-            margin-bottom: 15px;
+            margin: 0 auto 15px auto;
         }
 
         .file-card:hover {
             background: #0f0f0f;
-            border-left-color: #aaa;
             transform: translateY(-2px);
         }
 
@@ -169,6 +168,19 @@
             justify-content: space-between;
             gap: 10px;
         }
+
+        .file-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            filter: invert(1)
+        }
     </style>
 </head>
 
@@ -212,9 +224,33 @@
 
     <!--SCRIPT-->
     <script>
+        const fileIcons = {
+            '.txt': '/static/icons/text.png',
+            '.pdf': '/static/icons/pdf.png',
+            '.png': '/static/icons/image.png',
+            '.jpg': '/static/icons/image.png',
+            '.jpeg': '/static/icons/image.png',
+            '.zip': '/static/icons/zip.png',
+            '.mp3': '/static/icons/audio.png',
+            '.wav': '/static/icons/audio.png',
+            '.ogg': '/static/icons/audio.png',
+            '.mp4': '/static/icons/video.png',
+            '.mkv': '/static/icons/video.png',
+            '.webm': '/static/icons/video.png'
+        };
 
         const fileTypeSelect = document.getElementById('file_type');
         const fileArea = document.getElementById('file_area');
+
+        function getFileIcon(filename) {
+            if (!filename || !filename.includes('.')) {
+                return '/static/icons/file.png';
+            }
+
+            const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase();
+            return fileIcons[ext] || '/static/icons/file.png';
+        }
+
 
         function loadFiles() {
             const fileType = fileTypeSelect.value;
@@ -240,8 +276,18 @@
                         const card = document.createElement('div');
                         card.classList.add('file-card');
 
+                        const leftGroup = document.createElement('div');
+                        leftGroup.classList.add('file-left');
+
+                        const icon = document.createElement('img');
+                        icon.src = getFileIcon(name);
+                        icon.classList.add('file-icon');
+
                         const nameText = document.createElement('span');
                         nameText.textContent = name;
+
+                        leftGroup.append(icon, nameText);
+
 
                         const btnGroup = document.createElement('div');
                         btnGroup.classList.add('btn-group');
@@ -257,7 +303,7 @@
                         btnDecrypt.onclick = () => decryptAndDownload(name);
 
                         btnGroup.append(btnDecrypt, btnDelete);
-                        card.append(nameText, btnGroup);
+                        card.append(leftGroup, btnGroup);
                         fileArea.appendChild(card);
                     });
 
