@@ -124,6 +124,51 @@
             background: #ffffff;
             color: rgb(0, 0, 0);
         }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 14px;
+            padding: 20px;
+            width: 320px;
+            text-align: center;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 15px;
+            font-family: 'SigmarOne';
+        }
+
+        .modal-content input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
     </style>
 </head>
 
@@ -144,6 +189,19 @@
         </div>
     </div>
 
+    <!-- DECRYPT MODAL -->
+    <div id="decrypt_modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Enter Decryption Key</h3>
+
+            <input type="password" id="decrypt_key_input" placeholder="Enter key">
+
+            <div class="modal-btns">
+                <button class="btn btn-download" onclick="confirmDecrypt()">Decrypt</button>
+                <button class="btn btn-delete" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
 
 
     <!--SCRIPT-->
@@ -212,10 +270,21 @@
 
 
         function decryptAndDownload(name) {
-            const key = prompt("Enter your decryption key:");
+            selectedFile = name;
+            document.getElementById('decrypt_key_input').value = '';
+            document.getElementById('decrypt_modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('decrypt_modal').classList.add('hidden');
+            selectedFile = null;
+        }
+
+        function confirmDecrypt() {
+            const key = document.getElementById('decrypt_key_input').value;
 
             if (!key) {
-                alert("Decryption cancelled");
+                alert("Please enter a key");
                 return;
             }
 
@@ -224,27 +293,28 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     action: "decrypt_download",
-                    file_name: name,
+                    file_name: selectedFile,
                     key: key
                 })
             })
                 .then(res => {
-                    if (!res.ok) throw new Error("Wrong key or server error");
+                    if (!res.ok) throw new Error("Wrong key");
                     return res.blob();
                 })
                 .then(blob => {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement("a");
                     a.href = url;
-                    a.download = name; 
+                    a.download = selectedFile;
                     a.click();
                     window.URL.revokeObjectURL(url);
+                    closeModal();
                 })
-                .catch(err => {
+                .catch(() => {
                     alert("Decryption failed");
-                    console.error(err);
                 });
         }
+
 
 
         fileTypeSelect.addEventListener('change', loadFiles);

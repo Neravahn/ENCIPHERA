@@ -18,9 +18,3 @@ def fetch(username, file_type):
     return name
 
 
-# files = fetch('prashant')
-# file_names = []
-# for i in range(len(files)):
-#     file_names.append(files[i][0])
-
-# print(file_names)

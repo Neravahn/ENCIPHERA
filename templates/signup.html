@@ -24,7 +24,7 @@
             <input type="text" id="name" name="name" placeholder="Enter your full name" required>
 
             <label for="username">USERNAME</label>
-            <input type="text" id="username" name="username" placeholder="Choose a username" required>
+            <input type="text" id="username" name="username" placeholder="Choose a username" required pattern="^\S+$">
 
             <label for="email">E-MAIL</label>
             <input type="email" id="email" name="email" placeholder="Enter your email" required>
@@ -45,6 +45,10 @@
             {{ error }}
             {% endif %}
         </div>
+
+        <a href="{{ url_for('login')}}">
+            Already have and account? Login
+        </a>
 
     </div>
 
@@ -73,7 +77,6 @@
                 errorDiv.innerHTML = errors.join("<br>");
             }
         })
-
     </script>
 </body>
 

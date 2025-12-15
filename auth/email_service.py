@@ -25,9 +25,7 @@ def send_otp(receiver_email):
         server.login(SENDER_EMAIL, APP_PASSWORD)
         server.sendmail(SENDER_EMAIL, receiver_email, msg.as_string())
         server.quit()
-        print('sent')
         return otp
     
     except Exception as e:
-        print(str(e))
         return None

@@ -10,11 +10,21 @@ from file_manager.save_file import save
 from file_manager.fetch_files import fetch
 from file_manager.user_file import get_user_files
 from file_manager.delete_file import delete
-
+from functools import wraps
+from auth.changePass import changePassEmail, changePassUsername, getEmail
 
 
 app = Flask(__name__)
 app.secret_key = "your_super_secret_key_here"
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'username' not in session:
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated
 
 
 @app.route('/')
@@ -28,6 +38,10 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+
+        username = username.strip()
+        if " " in username:
+            return render_template('singup.html', error = "NO SPACES IN USERNAME")
         
         if user_exists_email(email):
             return render_template('signup.html', error="E-MAIL ALREADY IN USE")
@@ -95,11 +109,13 @@ def login():
 
 
 @app.route('/dashboard', methods = ['GET', 'POST'])
+@login_required
 def dashboard():
     username = session.get('username')
     return render_template('dashboard.html', username = f"Hi , {username}")
 
 @app.route('/editor', methods = ['GET', 'POST'])
+@login_required
 def editor():
     if request.method == 'GET':
         return render_template('editor.html')
@@ -133,12 +149,24 @@ def editor():
     
 
 @app.route('/upload_file', methods = ['POST'])
+@login_required
 def upload_file():
     file_format = request.form.get('fileFormat')
+    ALLOWED_EXTENSIONS = {
+    '.txt', '.pdf', '.png', '.zip',
+    '.mp3', '.wav', '.ogg',
+    '.mp4', '.mkv', '.webm'
+    }
+
+    if file_format not in ALLOWED_EXTENSIONS:
+        return {'success': False, 'message': 'Invalid file type'}
+    
+
     file_name = request.form.get('fileName')
     file = request.files['inputFile'].read()
-    key = generate_key()
-    key_bytes = [ord(c) for c in key]
+    key = generate_key().encode('utf-8')
+    encrypted = encrypt(file, key)
+
     username = session.get('username')
 
 
@@ -147,7 +175,7 @@ def upload_file():
     print(file_name)
     print(file_format)
 
-    encrypted = encrypt(file, key_bytes)
+    encrypted = encrypt(file, key)
     saved = save(username, file_name, file_format, encrypted)
 
     if saved:
@@ -157,6 +185,7 @@ def upload_file():
 
 
 @app.route('/file_manager', methods= ['GET', 'POST'])
+@login_required
 def file_manager():
     if request.method == 'POST':
         data = request.get_json()
@@ -203,6 +232,49 @@ def file_manager():
             )
 
     return render_template('file_manager.html')
+
+
+@app.route('/forgetPassword', methods = ['GET', 'POST'])
+def forgetPassword():
+    if request.method == 'POST':
+        username = request.get['username']
+        email = request.get['email']
+
+        username = user_exist_username(username)
+        email = user_exists_email(email)
+
+        session['email_fpverify'] = email
+        session['username_fpverify'] = username
+        if username == None or email == None:
+            return render_template('forgetPassword.html', error = "No such user, Sign Up?")
+        
+        else:
+            otp = send_otp(email)
+            session['fp_otp'] = otp
+            return redirect('/verify_fpotp')
+
+    return render_template('forgetPassword.html')
+
+@app.route('/verify_fpotp', methods = ['GET', 'POST'])
+def verify_fp_otp():
+    if request.method == 'POST':
+        username = session.get('username_fpverify')
+        email = session.get()('email_fpverify')
+        password = request.get('password')
+
+        if email:
+            done = changePassEmail(email, password)
+        elif username:
+            getemail = getEmail(username)
+            done = changePassUsername(username, password)
+
+
+        if done:
+            return redirect('/login')
+
+
+
+    return render_template('verify_fpotp.html')
 
 
 if __name__ == "__main__":

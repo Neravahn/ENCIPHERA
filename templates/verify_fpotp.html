@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ENCIPHERA - Signup</title>
+    <title>Verify</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
     <style>
         @font-face {
@@ -17,22 +17,17 @@
 
 <body>
     <div id="form-container">
-        <form id="signup" method="POST" action="/login">
-            <h2>LOGIN</h2>
-
-            <label for="username">USERNAME</label>
-            <input type="text" id="username" name="username" placeholder="Enter Username" required>
-
+        <form id="otp_verify" method="POST" action="/verify_fpotp">
+            <h2>OTP VERICATION</h2>
 
             <label for="password">PASSWORD</label>
             <input type="password" id="password" name="password" placeholder="Enter Password" required>
 
+            <label for="confirm_password">CONFIRM PASSSWORD</label>
+            <input type="confirm_password" id="confirm_password" name="confirm_password" placeholder="Re Enter Password"
+                required>
 
-            <a id="forgetPassword" href="{{ url_for('forgetPassword')}}">
-                Forgot Password? Click here
-            </a>
-
-            <button type="submit">Login</button>
+            <button type="submit">SUBMIT</button>
         </form>
         <div id="errors" style="display:none; {% if error %}display:block;{% endif %}">
 
@@ -41,24 +36,32 @@
             {% endif %}
         </div>
 
-        <a href="{{ url_for('signup')}}">
-            Don't have an account? Create one
-        </a>
-
     </div>
     </div>
 
 
-
-    <!--SCRIPT-->
     <script>
-        const form = document.getElementById('signup');
-        const password = document.getElementById('password');
+        const Password = document.getElementById('password').value;
+        const ConfirmPassword = document.getElementById('confirm_password').value;
         const errorDiv = document.getElementById('errors');
+        const form = document.getElementById('otp_verify');
 
         form.addEventListener('submit', function (event) {
-        })
+            errorDiv.innerHTML = "";
+            errorDiv.style.display = "none";
 
+
+            let errors = []
+            if (password.value !== confirm_password.value) {
+                errors.push('PASSSWORDS DO NOT MATCH');
+            }
+
+            if (errors.length > 0) {
+                event.preventDefault();
+                errorDiv.style.display = "block";
+                errorDiv.innerHTML = errors.join("<br>");
+            }
+        })
     </script>
 </body>
 
