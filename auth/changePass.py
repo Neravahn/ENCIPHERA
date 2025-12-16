@@ -1,8 +1,13 @@
 import sqlite3
 from mathhash import hash_password
+import os
 
-DB_PATH = 'database.db'
 
+
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, 'database.db')
 conn = sqlite3.connect(DB_PATH)
 curosr = conn.cursor()
 
@@ -49,4 +54,3 @@ def getEmail(username):
     return email
 
 
-print(getEmail('prashant'))

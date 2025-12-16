@@ -142,7 +142,8 @@ def editor():
             return {"success": False, "message": "A File with this name already exists, choose another name"}
 
         #SAVING AND ERROR HANDLING
-        isSaved = save(username, file_name, file_type, encrypted_text)
+        filename = f"{file_name}{file_type}"
+        isSaved = save(username, filename, file_type, encrypted_text)
 
         if isSaved:
             return {"success": True, "message": f"Saved Successfully, Your Key: {key} (NOTE: This key will be desplayed only once)"}

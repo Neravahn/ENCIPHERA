@@ -1,6 +1,8 @@
 import sqlite3
+import os
 
-DB_PATH = 'database.db'
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, 'database.db')
 def save(username, file_name, file_type, data: bytes):
 
 
@@ -16,3 +18,4 @@ def save(username, file_name, file_type, data: bytes):
     cursor.execute(query, (username, file_name, file_type, data))
     conn.commit()
     return True
+

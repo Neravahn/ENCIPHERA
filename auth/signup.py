@@ -1,7 +1,12 @@
 import sqlite3
 from mathhash import hash_password   #<<----- MY HASHING LIBRARY :D
+import os
 
-DB_PATH ="database.db"
+
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_PATH = os.path.join(BASE_DIR, 'database.db')
 
 def save_user(name, username, email, password):
 
