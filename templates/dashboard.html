@@ -166,13 +166,11 @@
 
         }
 
-        #username {
+        #logout {
             position: absolute;
             top: 10px;
             right: 50px;
-            font-size: 1.5rem;
-            font-family: 'Nunito';
-            color: #ffffff;
+            margin-top: 10px;
         }
 
         #start {
@@ -295,6 +293,12 @@
             width: 25px;
             height: 25px;
         }
+
+        #logout img {
+            width: 35px;
+            height: 35px;
+            filter: invert(1);
+        }
     </style>
 
 </head>
@@ -302,15 +306,16 @@
 <body>
 
     <header>
-        <div id="username">
-            {% if username %}
-            {{ username }}
-            {% endif %}
+        <div id="logout">
+            <form id="logoutForm" action="{{ url_for('logout') }}" method="POST" style="display:none;"></form>
+
+            <img src="{{ url_for('static', filename='images/logout.png') }}" alt="Logout"
+                onclick="document.getElementById('logoutForm').submit();">
         </div>
     </header>
     <div id="heading">
         <h2>ENCRYPT. PROTECT .CONTROL</h2>
-        <p>Your files are encrypted on our servers using powerful AES-256 encryption.
+        <p>Your files are encrypted on our servers using powerful encryption.
             Only your decryption key unlocks your data.</p>
     </div>
 
@@ -380,7 +385,7 @@
             <h3>Core Features .</h3>
             <div class="card">
                 <h4>1. Encrypted Notes and Storage</h4>
-                <p>Every file is encrypted on the server using industry-grade AES-256 encryption with a unique per-note
+                <p>Every file is encrypted on the server using custom encryption with a unique per-file
                     key.</p>
             </div>
 

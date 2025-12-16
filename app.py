@@ -114,7 +114,7 @@ def login():
 @login_required
 def dashboard():
     username = session.get('username')
-    return render_template('dashboard.html', username = f"Hi , {username}")
+    return render_template('dashboard.html')
 
 @app.route('/editor', methods = ['GET', 'POST'])
 @login_required
@@ -278,10 +278,16 @@ def verify_fp_otp():
         if done:
             return redirect('/login')
 
-
-
     return render_template('verify_fpotp.html')
 
 
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect('/') 
+
+    
 if __name__ == "__main__":
     app.run(debug=True)
