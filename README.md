@@ -74,3 +74,22 @@ Testing status will be updated as development continues
 
 *ENCIPHERA* showcases custom cryptography, server-side encryption design, and secure file handling — all in a clean, user-friendly package.
 It is both a practical vault and a technical learning project, demonstrating how encryption systems can be built from scratch.
+
+
+
+## FOR TESTING
+- username: testaccount
+- password: testaccount
+
+- text key: dCMw+^qSKIAbXGto
+- png key: fNOJGtO8Y!jYUj5U
+- video key: 587R41OvNnzUgrks
+
+
+- [DEMO VIDEO](https://drive.google.com/file/d/1WwOjJV-XVDoxfSI4NlHWDkCmCOD5lCeF/view?usp=sharing)
+- [ENCIPHERA](enciphera.pythonanywhere.com)
+
+
+
+
+
