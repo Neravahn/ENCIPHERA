@@ -1,2 +1,2 @@
-Flask==2.3.6
+Flask==2.3.3
 mathhash==1.0.0
